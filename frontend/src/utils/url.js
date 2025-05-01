@@ -1,3 +1,4 @@
-export const USERS_URL = "http://localhost:5000/api/users";
-export const GROUPS_URL = "http://localhost:5000/api/groups";
-export const CHATS_URL = "http://localhost:5000/api/messages";
+const BASE_URL="https://gossipp.onrender.com";
+export const USERS_URL = `${BASE_URL}/api/users`;
+export const GROUPS_URL = `${BASE_URL}/api/groups`;
+export const CHATS_URL = `${BASE_URL}/api/messages`;
