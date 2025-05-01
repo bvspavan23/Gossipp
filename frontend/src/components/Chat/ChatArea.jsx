@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMessageCircle } from "react-icons/fi";
-import { getMessagesAPI} from "../../services/chats/chatServices";
+import { getMessagesAPI, sendMessageAPI } from "../../services/chats/chatServices";
 import {getMembersAPI} from "../../services/groups/groupServices";
 import { useDispatch } from "react-redux";
 import { addMessage } from "../../redux/slice/chatSlice";
