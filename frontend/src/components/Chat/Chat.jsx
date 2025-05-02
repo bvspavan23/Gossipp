@@ -3,7 +3,7 @@ import Sidebar from "../NavBars/SideBar";
 import io from "socket.io-client";
 import { Outlet, useNavigate } from "react-router-dom";
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://gossipp.onrender.com";
 
 const Chat = () => {
   const [socket, setSocket] = useState(null);
