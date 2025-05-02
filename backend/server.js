@@ -14,14 +14,19 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: ["http://localhost:5173","https://gossipp.vercel.app"],
+    origin: ["https://gossipp.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
     transports: ["websocket"],
     allowedHeaders: ["socketid"]
   },
 });
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173", "https://gossipp.vercel.app"],
+  methods: ["GET", "POST"],
+  credentials: true
+}));
+
 app.use(express.json());
 mongoose
   .connect(process.env.MONGO_URL)
