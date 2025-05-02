@@ -14,7 +14,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: ["https://gossipp.vercel.app"],
+    origin: ["http://localhost:5173","https://gossipp.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
     transports: ["websocket"],
@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
   res.json({
     project: "MERN Chat App using Socket.IO",
     message: "Welcome to MERN Chat Application",
-    developedBy: "pavan",
+    developedBy: "Pavan",
     website: "www.pavan.com",
   });
 });

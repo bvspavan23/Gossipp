@@ -7,7 +7,7 @@ const upload = require("../middleware/multer");
 const cloudinary = require("../cloudinary");
 
 //Create a new group
-groupRouter.post("/", protect, isAdmin, upload.single("profilePic"), async (req, res) => {
+groupRouter.post("/", protect, upload.single("profilePic"), async (req, res) => {
   try {
     const { name, description } = req.body;
     let profilepicUrl = "";
@@ -26,7 +26,7 @@ groupRouter.post("/", protect, isAdmin, upload.single("profilePic"), async (req,
           }
         );
 
-        stream.end(req.file.buffer); // send file buffer
+        stream.end(req.file.buffer); 
       });
     }
 
