@@ -39,10 +39,10 @@ groupRouter.post("/", protect, upload.single("profilePic"), async (req, res) => 
     });
 
     const populatedGroup = await Group.findById(group._id)
-      .populate("admin", "username email")
-      .populate("members", "username email");
+      .populate("admin", "username email profilePic")
+      .populate("members", "username email profilePic");
 
-    res.status(201).json({ populatedGroup });
+    res.status(201).json(populatedGroup);
   } catch (error) {
     console.error("Group creation error:", error);
     res.status(400).json({ message: error.message });
@@ -51,7 +51,7 @@ groupRouter.post("/", protect, upload.single("profilePic"), async (req, res) => 
 
 groupRouter.get("/:groupId/members", protect, async (req, res) => {
   try{
-    const group = await Group.findById(req.params.groupId).populate("members", "username email");
+    const group = await Group.findById(req.params.groupId).populate("members", "username email profilePic");
     res.json(group.members);
   }
   catch(error){
@@ -62,8 +62,8 @@ groupRouter.get("/:groupId/members", protect, async (req, res) => {
 groupRouter.get("/", protect, async (req, res) => {
   try {
     const groups = await Group.find()
-      .populate("admin", "username email")
-      .populate("members", "username email");
+      .populate("admin", "username email profilePic")
+      .populate("members", "username email profilePic");
     res.json(groups);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -72,7 +72,7 @@ groupRouter.get("/", protect, async (req, res) => {
 
 groupRouter.get("/:groupId", protect, async (req, res) => {
   try{
-    const group = await Group.findById(req.params.groupId).populate("admin", "username email").populate("members", "username email");
+    const group = await Group.findById(req.params.groupId).populate("admin", "username email profilePic").populate("members", "username email profilePic");
     res.json(group);
   }
   catch(error){

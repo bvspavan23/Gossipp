@@ -13,7 +13,7 @@ messageRouter.post("/", protect, async (req, res) => {
     });
     const populatedMessage = await Message.findById(message._id).populate(
       "sender",
-      "username email"
+      "username email profilePic"
     );
     res.json(populatedMessage);
   } catch (error) {
@@ -24,7 +24,7 @@ messageRouter.post("/", protect, async (req, res) => {
 messageRouter.get("/:groupId", protect, async (req, res) => {
   try {
     const messages = await Message.find({ group: req.params.groupId })
-      .populate("sender", "username email")
+      .populate("sender", "username email profilePic")
       .sort({ createdAt: 1 });
     res.json(messages);
   } catch (error) {
