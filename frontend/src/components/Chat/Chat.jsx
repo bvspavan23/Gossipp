@@ -4,6 +4,7 @@ import io from "socket.io-client";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const ENDPOINT = "https://gossipp.onrender.com";
+const ENDPOINT1 = "https://gossipp.onrender.com";
 
 const Chat = () => {
   const [socket, setSocket] = useState(null);
@@ -16,7 +17,7 @@ const Chat = () => {
     const userInfo = stored ? JSON.parse(stored) : null;
     const user = userInfo?.user; 
     
-    const newSocket = io(ENDPOINT, {
+    const newSocket = io(ENDPOINT1, {
       auth: { user },
       transports: ["websocket"],
       withCredentials: true      

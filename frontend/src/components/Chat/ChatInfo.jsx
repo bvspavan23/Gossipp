@@ -1,11 +1,34 @@
 import { motion } from "framer-motion";
+import { leaveGroupAPI } from "../../services/groups/groupServices";
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import AlertMessage from "../Alert/AlertMessage";
 
-const ChatInfo = ({ 
-  groupName, 
-  description, 
-  members, 
-  onlineUsersInRoom 
+const ChatInfo = ({
+  groupName,
+  description,
+  members,
+  onlineUsersInRoom,
+  profilePic,
 }) => {
+  console.log("GROUP MEMBERS FROM CHATINFO", members);
+  const { groupId } = useParams();
+  const navigate = useNavigate();
+  const [alert, setAlert] = useState(null);
+
+  const handleLeaveGroup = async () => {
+    try {
+      await leaveGroupAPI(groupId);
+      setAlert({ type: "success", message: "Left the group successfully!" });
+      setTimeout(() => {
+        navigate("/Gossipp/chats");
+      }, 1500); // delay to show success message before redirecting
+    } catch (err) {
+      setAlert({ type: "error", message: "Failed to leave the group." });
+      console.error("Error leaving group:", err);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -14,9 +37,19 @@ const ChatInfo = ({
       className="flex-1 overflow-y-auto p-4"
     >
       <div className="flex flex-col items-center mb-6">
+        {alert && (
+          <div className="mb-4 w-full max-w-md">
+            <AlertMessage type={alert.type} message={alert.message} />
+          </div>
+        )}
+
         <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mb-4">
           <span className="text-2xl text-blue-600 font-bold">
-            {groupName?.charAt(0)}
+            <img
+              src={profilePic}
+              alt="Profile"
+              className="w-full h-full rounded-full object-cover mr-3"
+            />
           </span>
         </div>
         <h2 className="text-xl font-bold text-gray-800 text-center">
@@ -46,11 +79,13 @@ const ChatInfo = ({
                           : "bg-gray-200 text-gray-600"
                       }`}
                     >
-                      {member.username.charAt(0)}
+                      <img
+                        src={member.profilePic}
+                        alt="Profile"
+                        className="w-full h-full rounded-full object-cover"
+                      />
                     </div>
-                    <span className="font-medium">
-                      {member.username}
-                    </span>
+                    <span className="font-medium">{member.username}</span>
                   </div>
                   <span
                     className={`text-xs px-2 py-1 rounded-full ${
@@ -64,6 +99,12 @@ const ChatInfo = ({
                 </div>
               );
             })}
+            <button
+              className="mt-6 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full"
+              onClick={handleLeaveGroup}
+            >
+              Leave Group
+            </button>
           </div>
         </div>
       </div>

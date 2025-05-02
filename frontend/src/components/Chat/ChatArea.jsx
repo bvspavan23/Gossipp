@@ -10,7 +10,7 @@ import ChatInfo from "./ChatInfo";
 import ChatMessages from "./ChatMessages";
 import MessageInput from "./MessageInput";
 import {useNavigate} from "react-router-dom";
-const ChatArea = ({ groupName, description, groupId, onlineUsers, socket }) => {
+const ChatArea = ({ groupName, description, groupId, onlineUsers,profilePic,socket }) => {
   const [showGroupInfo, setShowGroupInfo] = useState(false);
   const [members, setMembers] = useState([]);
   const [onlineUsersInRoom, setOnlineUsersInRoom] = useState([]);
@@ -102,6 +102,8 @@ const ChatArea = ({ groupName, description, groupId, onlineUsers, socket }) => {
         try {
           const Mems = await getMembersAPI(groupId);
           setMembers(Mems);
+          console.log("MEMBERS DETAIS FROM CHATAREA", Mems);
+          
         } catch (error) {
           console.log(error);
         }
@@ -130,6 +132,7 @@ const ChatArea = ({ groupName, description, groupId, onlineUsers, socket }) => {
           sender: {
             _id: response.sender._id,
             username: response.sender.username,
+            profilePic: response.sender.profilePic
           },
           isCurrentUser: true,
           createdAt: new Date(response.createdAt).toLocaleTimeString([], {
@@ -155,6 +158,7 @@ const ChatArea = ({ groupName, description, groupId, onlineUsers, socket }) => {
         sender: {
           _id: message.sender._id,
           username: message.sender.username,
+          profilePic: message.sender.profilePic
         },
         isCurrentUser: message.sender._id === currentUserId,
         createdAt: new Date(message.createdAt).toLocaleTimeString([], {
@@ -236,6 +240,7 @@ const ChatArea = ({ groupName, description, groupId, onlineUsers, socket }) => {
               description={description}
               members={members}
               onlineUsersInRoom={onlineUsersInRoom}
+              profilePic={profilePic}
             />
           ) : (
             <>

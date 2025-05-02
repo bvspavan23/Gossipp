@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { getGroupByIdAPI, joinGroupAPI, leaveGroupAPI } from "../../services/groups/groupServices";
+import {getGroupByIdAPI,joinGroupAPI,leaveGroupAPI,} from "../../services/groups/groupServices";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import AlertMessage from "../Alert/AlertMessage"; 
+import AlertMessage from "../Alert/AlertMessage";
 
 const GroupDetails = () => {
   const { groupId } = useParams();
@@ -16,6 +16,9 @@ const GroupDetails = () => {
   const fetchGroup = async () => {
     try {
       const data = await getGroupByIdAPI(groupId);
+      console.log("Group data from group component:", data);
+      console.log("ADMIN FROM GROUP COMPONENT", data.admin);
+
       setGroup(data);
     } catch (err) {
       console.error("Error fetching group:", err);
@@ -52,8 +55,10 @@ const GroupDetails = () => {
 
   const isMember = group?.members?.some((member) => member._id === userId);
 
-  if (loading) return <p className="text-center mt-10">Loading group details...</p>;
-  if (!group) return <p className="text-center mt-10 text-red-500">Group not found.</p>;
+  if (loading)
+    return <p className="text-center mt-10">Loading group details...</p>;
+  if (!group)
+    return <p className="text-center mt-10 text-red-500">Group not found.</p>;
 
   return (
     <motion.div
@@ -63,7 +68,6 @@ const GroupDetails = () => {
       className="flex-1 overflow-y-auto p-4"
     >
       <div className="flex flex-col items-center mb-6">
-        {/* Alert Message */}
         {alert && (
           <div className="mb-4 w-full max-w-md">
             <AlertMessage type={alert.type} message={alert.message} />
@@ -73,19 +77,20 @@ const GroupDetails = () => {
         {/* Group Avatar */}
         <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mb-4">
           <span className="text-2xl text-blue-600 font-bold">
-            {group.name?.charAt(0)}
+          <img
+          src={group.profilePic}
+          alt={group.username}
+          className="w-full h-full rounded-full object-cover mr-3"
+        />
+            {/* {group.name?.charAt(0)} */}
           </span>
         </div>
-
-        {/* Group Name and Description */}
         <h2 className="text-xl font-bold text-gray-800 text-center">
           {group.name}
         </h2>
         <p className="text-gray-600 text-center mt-2 mb-4 px-4">
           {group.description}
         </p>
-
-        {/* Actions */}
         {!isMember ? (
           <div className="text-center mt-4">
             <p className="text-red-600 font-medium mb-2">
@@ -105,17 +110,34 @@ const GroupDetails = () => {
                 Members ({group.members.length})
               </h3>
               <div className="space-y-3">
-                {group.members.map((member) => (
-                  <div
-                    key={member._id}
-                    className="flex items-center justify-start p-2 bg-gray-50 rounded-lg"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center mr-3">
-                      {member.username.charAt(0)}
-                    </div>
-                    <span className="font-medium">{member.username}</span>
-                  </div>
-                ))}
+              {group.members.map((member) => {
+  const isAdmin = member._id === group.admin._id;
+  return (
+    <div
+      key={member._id}
+      className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
+    >
+      <div className="flex items-center">
+        <img
+          src={member.profilePic}
+          alt={member.username}
+          className="w-8 h-8 rounded-full object-cover mr-3"
+        />
+        <span className="font-medium">{member.username}</span>
+      </div>
+      <span
+        className={`text-sm font-semibold px-2 py-1 rounded ${
+          isAdmin
+            ? "bg-yellow-300 text-yellow-800"
+            : "bg-green-100 text-green-700"
+        }`}
+      >
+        {isAdmin ? "Admin" : "Member"}
+      </span>
+    </div>
+  );
+})}
+
               </div>
             </div>
 

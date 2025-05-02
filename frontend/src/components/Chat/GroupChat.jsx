@@ -22,6 +22,8 @@ const GroupChat = () => {
       try {
         const data = await getGroupByIdAPI(groupId);
         setGroupInfo(data);
+        console.log("GROUP INFO FROM GROUP CHAT", data);
+        
       } catch (error) {
         console.error("Failed to fetch group info:", error);
       }
@@ -40,6 +42,7 @@ const GroupChat = () => {
       onlineUsers={onlineUsers}
       description={groupInfo.description}
       groupName={groupInfo.name}
+      profilePic={groupInfo.profilePic}
       socket={socket}
     />
   );
