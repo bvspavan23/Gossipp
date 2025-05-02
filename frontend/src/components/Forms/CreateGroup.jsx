@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createGroupAPI } from "../../services/groups/groupServices";
+import AlertMessage from "../Alert/AlertMessage"; 
 
 const GroupForm = () => {
   const [formData, setFormData] = useState({
     name: "", 
     description: "",
-    profilepic: "", // preview URL
+    profilepic: "",
     profilepicFile: null, 
   });
-
+  const [alert, setAlert] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -28,6 +30,8 @@ const GroupForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setAlert({ type: "loading", message: "Creating group..." });
 
     const form = new FormData();
     form.append("name", formData.name);
@@ -39,10 +43,22 @@ const GroupForm = () => {
     try {
       const response = await createGroupAPI(form);
       console.log("Group created:", response);
-      // dispatch()
-      navigate("/Gossipp/chats"); 
+      
+      setAlert({ type: "success", message: "Group created successfully!" });
+      
+      // Navigate after a short delay to let user see the success message
+      setTimeout(() => {
+        navigate("/Gossipp/chats");
+      }, 1500);
+      
     } catch (error) {
       console.error("Failed to create group", error);
+      setAlert({ 
+        type: "error", 
+        message: error.response?.data?.message || "Failed to create group" 
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -52,10 +68,13 @@ const GroupForm = () => {
         <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-8">
           Create Group
         </h2>
-
         <div className="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
+          {alert && (
+            <div className="mb-6">
+              <AlertMessage type={alert.type} message={alert.message} />
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Profile Picture Upload */}
             <div className="flex flex-col items-center">
               <div className="relative mb-4">
                 <img
@@ -69,7 +88,6 @@ const GroupForm = () => {
                   </div>
                 )}
               </div>
-
               <label className="cursor-pointer bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-indigo-700 transition duration-300">
                 <span>Upload Photo</span>
                 <input
@@ -78,11 +96,10 @@ const GroupForm = () => {
                   accept="image/*"
                   onChange={handleChange}
                   className="hidden"
+                  disabled={isSubmitting}
                 />
               </label>
             </div>
-
-            {/* Group Name Field */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                 Group Name
@@ -94,11 +111,10 @@ const GroupForm = () => {
                 required
                 value={formData.name}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
-
-            {/* Description Field */}
             <div>
               <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                 Description
@@ -110,24 +126,25 @@ const GroupForm = () => {
                 required
                 value={formData.description}
                 onChange={handleChange}
+                disabled={isSubmitting}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
-
-            {/* Buttons */}
             <div className="flex space-x-4">
               <button
                 type="button"
                 onClick={() => navigate("/profile")}
-                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                disabled={isSubmitting}
+                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                disabled={isSubmitting}
+                className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
               >
-                Create Group
+                {isSubmitting ? "Creating..." : "Create Group"}
               </button>
             </div>
           </form>

@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 const Profile = () => {
   const [user, setUser] = useState(null);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  console.log("USER INFO FROM PROFILE", userInfo);
+  
   const localUser = userInfo?.user?._id;
   const navigate = useNavigate();
   const dispatch = useDispatch();

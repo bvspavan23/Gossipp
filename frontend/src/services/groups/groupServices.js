@@ -15,7 +15,7 @@ export const getGroupsAPI = async () => {
 export const createGroupAPI = async (formData) => {
   const response = await axios.post(`${GROUPS_URL}/`,formData ,{
     headers: {
-      content: "multipart/form-data",
+      "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     },
   });

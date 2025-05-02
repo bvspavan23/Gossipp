@@ -17,14 +17,17 @@ const Sidebar = ({ onGroupSelect }) => {
   const isAdmin = true;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const Profile=useSelector((state) => state.user?.user);
-  console.log("PROFILE FROM SIDE BAR:", Profile);
+
+  // const Profile=useSelector((state) => state.user?.user);
+  // console.log("PROFILE FROM SIDE BAR:", Profile);
   
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   console.log("ACCOUNT INFO", userInfo);
   console.log("USER:",userInfo.user.username);
   
-  const profilePic = userInfo?.user.profilePic || "https://via.placeholder.com/40";
+  const profilePic = userInfo?.user.profilePic || "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg";
+  console.log("PROFILE PIC FORM SIDEBAR", profilePic);
+  
 
   const CreateGroup = () => {
     navigate("/create-group");
@@ -103,7 +106,6 @@ const Sidebar = ({ onGroupSelect }) => {
             )}
           </motion.div>
           
-          {/* Collapse/expand button (desktop) */}
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
@@ -117,7 +119,6 @@ const Sidebar = ({ onGroupSelect }) => {
               <FiChevronDown className="text-gray-600 text-xl transform rotate-90" />
             )}
           </motion.button>
-          {/* Close button (mobile) */}
           <button
             onClick={() => setIsMobileOpen(false)}
             className="md:hidden p-1 hover:bg-gray-100 rounded-full transition"
