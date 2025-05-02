@@ -42,6 +42,7 @@ userRouter.post("/login", async (req, res) => {
           email: user.email,
           isAdmin: user.isAdmin,
           token: generateToken(user._id),
+          profilePic: user.profilePic,
         },
       });
     } else {
