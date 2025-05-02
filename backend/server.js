@@ -17,7 +17,7 @@ const io = socketio(server, {
     origin: ["http://localhost:5173","https://gossipp.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
-    transports: ["websocket", "polling"],
+    transports: ["websocket"],
     allowedHeaders: ["socketid"]
   },
 });
