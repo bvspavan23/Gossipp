@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ProfileAPI } from "../../services/users/userService";
 import { useNavigate } from "react-router-dom";
+import { setProfileAction } from "../../redux/slice/profileSlice";
+import { useDispatch } from "react-redux";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const localUser = userInfo?.user?._id;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -16,6 +19,7 @@ const Profile = () => {
         const userProfile = await ProfileAPI();
         console.log("USER PROFILE", userProfile);
         setUser(userProfile);
+        dispatch(setProfileAction(userProfile));
       } catch (error) {
         console.error("Failed to load profile:", error);
       }
@@ -40,8 +44,6 @@ const Profile = () => {
     <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="flex flex-col items-center">
         <h1 className="text-3xl font-bold text-gray-800 mb-8">My Profile</h1>
-
-        {/* Profile Picture */}
         <div className="relative w-32 h-32 rounded-full border-4 border-indigo-100 shadow-lg mb-6 overflow-hidden">
           <img
             src={user.profilepic}
@@ -50,30 +52,14 @@ const Profile = () => {
           />
           <div className="absolute inset-0 bg-indigo-50 opacity-0 hover:opacity-20 transition-opacity duration-300"></div>
         </div>
-
-        {/* User Info */}
         <div className="w-full text-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800">{user.username}</h2>
           <p className="text-gray-600 mb-4">{user.email}</p>
-
-          {/* Example Stats */}
-          <div className="flex justify-center space-x-6 mb-6">
-            <div className="text-center">
-              <p className="font-bold text-gray-800">120</p>
-              <p className="text-sm text-gray-500">Connections</p>
-            </div>
-            <div className="text-center">
-              <p className="font-bold text-gray-800">45</p>
-              <p className="text-sm text-gray-500">Posts</p>
-            </div>
-          </div>
         </div>
-
-        {/* Action Buttons */}
         <div className="flex space-x-4 w-full justify-center">
           <button
             onClick={UpdateProfile}
-            className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-300 shadow-md"
+            className="px-6 py-2 bg-indigo-600 text-white rounded-lg bg-gradient-to-r from-[#4f5bd5] to-[#962fbf] hover:from-[#3b4cca] hover:to-[#7b1fa2] transition-colors duration-300 shadow-md"
           >
             Edit Profile
           </button>

@@ -6,6 +6,7 @@ import { logoutAction } from "../../redux/slice/authSlice";
 import { getGroupsAPI } from "../../services/groups/groupServices";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoMdAdd } from "react-icons/io";
+import { useSelector } from "react-redux";
 
 const Sidebar = ({ onGroupSelect }) => {
   const [groupsData, setGroupsData] = useState([]);
@@ -16,8 +17,9 @@ const Sidebar = ({ onGroupSelect }) => {
   const isAdmin = true;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  // Get user info from localStorage (assuming you store it there after login)
+  const Profile=useSelector((state) => state.user?.user);
+  console.log("PROFILE FROM SIDE BAR:", Profile);
+  
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   console.log("ACCOUNT INFO", userInfo);
   console.log("USER:",userInfo.user.username);
@@ -58,7 +60,6 @@ const Sidebar = ({ onGroupSelect }) => {
     fetchGroups();
   }, []);
 
-  // Close mobile menu when resizing to desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -83,7 +84,6 @@ const Sidebar = ({ onGroupSelect }) => {
           isCollapsed ? 'w-20' : 'w-64 lg:w-72'
         }`}
       >
-        {/* Sidebar header with toggle button */}
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           <motion.div 
             initial={{ opacity: 0, y: -10 }}
@@ -117,7 +117,6 @@ const Sidebar = ({ onGroupSelect }) => {
               <FiChevronDown className="text-gray-600 text-xl transform rotate-90" />
             )}
           </motion.button>
-          
           {/* Close button (mobile) */}
           <button
             onClick={() => setIsMobileOpen(false)}
@@ -126,8 +125,6 @@ const Sidebar = ({ onGroupSelect }) => {
             <FiX className="text-gray-600 text-xl" />
           </button>
         </div>
-
-        {/* Groups list */}
         <div className="flex-1 overflow-y-auto p-4 mb-16 space-y-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
           {groupsData.length > 0 ? (
             groupsData.map((group) => (
@@ -174,7 +171,6 @@ const Sidebar = ({ onGroupSelect }) => {
                     </div>
                   </div>
                 </div>
-
                 {!isCollapsed && (
                   <AnimatePresence>
                     {expandedGroups[group._id] && (
@@ -199,15 +195,6 @@ const Sidebar = ({ onGroupSelect }) => {
                             >
                               View
                             </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                console.log(`Leaving group: ${group.name}`);
-                              }}
-                              className="text-sm text-red-500 hover:text-red-700 hover:bg-red-50 border border-red-500 px-3 py-1 rounded-md transition flex-1"
-                            >
-                              Leave
-                            </button>
                           </div>
                         </div>
                       </motion.div>
@@ -228,8 +215,6 @@ const Sidebar = ({ onGroupSelect }) => {
             )
           )}
         </div>
-
-        {/* Create Group button */}
         <motion.div 
           whileHover={{ backgroundColor: 'rgba(254, 226, 226, 0.5)' }}
           className="p-4 border-t border-gray-200 bg-gray-50 sticky bottom-0"
@@ -244,8 +229,6 @@ const Sidebar = ({ onGroupSelect }) => {
             {!isCollapsed && <span className="font-medium">Create Group</span>}
           </button>
         </motion.div>
-
-        {/* Profile dropdown */}
         <motion.div 
           className="p-4 border-t border-gray-200 bg-gray-50 sticky bottom-0"
         >
@@ -274,7 +257,6 @@ const Sidebar = ({ onGroupSelect }) => {
                 <FiChevronDown className={`text-gray-500 transition-transform ${isProfileOpen ? 'transform rotate-180' : ''}`} />
               )}
             </button>
-
             <AnimatePresence>
               {isProfileOpen && (
                 <motion.div
@@ -313,7 +295,6 @@ const Sidebar = ({ onGroupSelect }) => {
           </div>
         </motion.div>
       </motion.div>
-
       {/* Mobile menu toggle button (only visible on mobile) */}
       {!isMobileOpen && (
         <motion.button

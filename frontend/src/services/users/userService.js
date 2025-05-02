@@ -2,6 +2,7 @@ import axios from "axios";
 import { USERS_URL } from "../../utils/url";
 import { getUserFromStorage } from "../../utils/getUserFromStorage";
 const token = getUserFromStorage();
+console.log("TOKEN FROM SERVICES", token);
 export const registerAPI = async ({ username,email, password }) => {
   const response = await axios.post(`${USERS_URL}/register`, {
     username,
@@ -13,12 +14,13 @@ export const registerAPI = async ({ username,email, password }) => {
 export const loginAPI = async ({ email, password }) => {
   const response = await axios.post(`${USERS_URL}/login`, {
     email,
-    password,
+    password,    
   });
+  console.log("LOGIN RESPONSE", response.data);
   return response.data;
 }
 export const ProfileAPI = async () => {
-  const response = await axios.get(`${USERS_URL}/profile`, {
+  const response = await axios.get(`${USERS_URL}/profile`,{
     headers: {
       Authorization: `Bearer ${token}`,
     },

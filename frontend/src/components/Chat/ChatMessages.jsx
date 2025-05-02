@@ -55,7 +55,7 @@ const ChatMessages = ({
               <div
                 className={`p-3 rounded-lg max-w-[80%] md:max-w-[60%] ${
                   message.isCurrentUser
-                    ? "bg-blue-500 text-white rounded-tr-none"
+                    ? "bg-gradient-to-r from-[#4f5bd5] to-[#962fbf] text-white"
                     : "bg-white text-gray-800 rounded-tl-none shadow-sm"
                 }`}
               >
