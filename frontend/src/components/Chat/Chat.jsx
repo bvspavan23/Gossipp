@@ -17,8 +17,11 @@ const Chat = () => {
     const user = userInfo?.user; 
     
     const newSocket = io(ENDPOINT, {
-      auth: { user }, 
+      auth: { user },
+      transports: ["websocket"],
+      withCredentials: true      
     });
+    
     
     newSocket.on("connect", () => {
       console.log("Socket connected:", newSocket.id);
