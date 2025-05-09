@@ -43,6 +43,7 @@ userRouter.post("/login", async (req, res) => {
           isAdmin: user.isAdmin,
           token: generateToken(user._id),
           profilePic: user.profilePic,
+          connections: user.connections,
         },
       });
     } else {

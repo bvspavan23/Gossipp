@@ -8,6 +8,8 @@ const userRouter = require("./routes/userRoutes");
 const socketIo = require("./socket");
 const groupRouter = require("./routes/groupRoutes");
 const messageRouter = require("./routes/messageRoutes");
+const personRouter = require("./routes/personRoutes");
+const personalMessageRouter = require("./routes/PersonalMessageRoutes");
 dotenv.config();
 
 const app = express();
@@ -15,7 +17,7 @@ const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
     origin: ["https://gossipp.vercel.app"],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST","PUT","DELETE"],
     credentials: true,
     transports: ["websocket"],
     allowedHeaders: ["socketid"]
@@ -23,7 +25,7 @@ const io = socketio(server, {
 });
 app.use(cors({
   origin: ["https://gossipp.vercel.app"],
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST","PUT","DELETE"],
   credentials: true
 }));
 
@@ -34,18 +36,11 @@ mongoose
   .catch((err) => console.log("Mongodb connected failed", err));
 
 socketIo(io);
-app.get("/", (req, res) => {
-  res.json({
-    project: "MERN Chat App using Socket.IO",
-    message: "Welcome to MERN Chat Application",
-    developedBy: "Pavan",
-    website: "www.pavan.com",
-  });
-});
 app.use("/api/users", userRouter);
 app.use("/api/groups", groupRouter);
 app.use("/api/messages", messageRouter);
+app.use("/api/connections", personRouter);
+app.use("/api/connections/chats", personalMessageRouter);
 
-//start the server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, console.log("Server is up and running on port", PORT));
