@@ -1,33 +1,26 @@
 import { useEffect, useState } from "react";
-import { FiUsers, FiMenu, FiX, FiChevronDown, FiChevronRight, FiUser, FiLogOut } from "react-icons/fi";
+import { FiUsers, FiMenu, FiX, FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../../redux/slice/authSlice";
 import { getGroupsAPI } from "../../services/groups/groupServices";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoMdAdd } from "react-icons/io";
-import { useSelector } from "react-redux";
+import SidebarHeader from "./SidebarHeader";
+import LogoutButton from "./Logout";
+import ProfileSection from "./ProfileSection";
+import Shift from "./Shift";
 
 const Sidebar = ({ onGroupSelect }) => {
   const [groupsData, setGroupsData] = useState([]);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState({});
   const [isMobileOpen, setIsMobileOpen] = useState(true);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const isAdmin = true;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // const Profile=useSelector((state) => state.user?.user);
-  // console.log("PROFILE FROM SIDE BAR:", Profile);
-  
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  console.log("ACCOUNT INFO", userInfo);
-  console.log("USER:",userInfo.user.username);
-  
   const profilePic = userInfo?.user.profilePic || "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg";
-  console.log("PROFILE PIC FORM SIDEBAR", profilePic);
-  
 
   const CreateGroup = () => {
     navigate("/create-group");
@@ -75,7 +68,6 @@ const Sidebar = ({ onGroupSelect }) => {
 
   return (
     <>
-      {/* Sidebar container */}
       <motion.div
         initial={{ x: '-100%' }}
         animate={{ 
@@ -87,45 +79,19 @@ const Sidebar = ({ onGroupSelect }) => {
           isCollapsed ? 'w-20' : 'w-64 lg:w-72'
         }`}
       >
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="flex items-center space-x-2 overflow-hidden"
-          >
-            <FiUsers className="text-blue-500 text-2xl flex-shrink-0" />
-            {!isCollapsed && (
-              <motion.span 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-xl font-bold text-gray-800 whitespace-nowrap"
-              >
-                Gossipp
-              </motion.span>
-            )}
-          </motion.div>
-          
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden md:block p-1 hover:bg-gray-100 rounded-full transition"
-            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {isCollapsed ? (
-              <FiChevronRight className="text-gray-600 text-xl" />
-            ) : (
-              <FiChevronDown className="text-gray-600 text-xl transform rotate-90" />
-            )}
-          </motion.button>
-          <button
-            onClick={() => setIsMobileOpen(false)}
-            className="md:hidden p-1 hover:bg-gray-100 rounded-full transition"
-          >
-            <FiX className="text-gray-600 text-xl" />
-          </button>
-        </div>
+        <SidebarHeader 
+          isCollapsed={isCollapsed} 
+          setIsCollapsed={setIsCollapsed} 
+          isMobileOpen={isMobileOpen} 
+          setIsMobileOpen={setIsMobileOpen} 
+          icon={<FiUsers className="text-blue-500 text-2xl flex-shrink-0" />}
+          title="Gossipp"
+        />
+        <Shift 
+  name="Go to Private Chats" 
+  path="/Gossipp/connections" 
+  isCollapsed={isCollapsed} 
+/>
         <div className="flex-1 overflow-y-auto p-4 mb-16 space-y-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
           {groupsData.length > 0 ? (
             groupsData.map((group) => (
@@ -230,73 +196,15 @@ const Sidebar = ({ onGroupSelect }) => {
             {!isCollapsed && <span className="font-medium">Create Group</span>}
           </button>
         </motion.div>
-        <motion.div 
-          className="p-4 border-t border-gray-200 bg-gray-50 sticky bottom-0"
-        >
-          <div className="relative">
-            <button
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className={`flex items-center justify-center space-x-2 w-full p-2 rounded-md hover:bg-gray-100 transition-colors ${
-                isCollapsed ? 'justify-center' : 'justify-between'
-              }`}
-            >
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-                  <img 
-                    src={profilePic} 
-                    alt="Profile" 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                {!isCollapsed && (
-                  <span className="font-medium text-gray-700 truncate max-w-[120px]">
-                    {userInfo?.user.username || "User"}
-                  </span>
-                )}
-              </div>
-              {!isCollapsed && (
-                <FiChevronDown className={`text-gray-500 transition-transform ${isProfileOpen ? 'transform rotate-180' : ''}`} />
-              )}
-            </button>
-            <AnimatePresence>
-              {isProfileOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className={`absolute bg-white rounded-md shadow-lg overflow-hidden z-50 ${
-                    isCollapsed ? 'left-14 bottom-14 w-40' : 'left-0 bottom-14 w-full'
-                  }`}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <button
-                    onClick={() => {
-                      navigate("/profile");
-                      setIsProfileOpen(false);
-                    }}
-                    className="flex items-center space-x-2 w-full px-4 py-3 text-left hover:bg-gray-50 text-gray-700"
-                  >
-                    <FiUser className="text-gray-500" />
-                    <span>View Profile</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsProfileOpen(false);
-                    }}
-                    className="flex items-center space-x-2 w-full px-4 py-3 text-left hover:bg-gray-50 text-red-500"
-                  >
-                    <FiLogOut className="text-red-500" />
-                    <span>Logout</span>
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </motion.div>
+        <ProfileSection 
+          isCollapsed={isCollapsed} 
+          profilePic={profilePic} 
+          username={userInfo?.user.username} 
+          LogoutComponent={LogoutButton}
+        />
       </motion.div>
-      {/* Mobile menu toggle button (only visible on mobile) */}
+
+      {/* Mobile menu toggle button */}
       {!isMobileOpen && (
         <motion.button
           onClick={() => setIsMobileOpen(true)}

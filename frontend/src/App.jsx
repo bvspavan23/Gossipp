@@ -6,7 +6,7 @@ import Login from "./components/Forms/Login";
 import Register from "./components/Forms/Register";
 // import TestAuth from "./components/Auth/TestAuth";
 import AuthRoute from "./components/Auth/AuthRoute";
-import PrivateNav from "./components/NavBars/PrivateNavbar";
+// import PrivateNav from "./components/NavBars/PrivateNavbar";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Chat from "./components/Chat/Chat";
@@ -16,6 +16,9 @@ import EditProfileForm from "./components/Forms/UpdateProfile";
 import GroupForm from "./components/Forms/CreateGroup";
 import Group from "./components/Groups/Group";
 import GroupChat from "./components/Chat/GroupChat";
+import PersonInfo from "./components/PersonalChats/PersonInfo";
+import ChatSection from "./components/PersonalChats/ChatSection";
+import PersonalChat from "./components/PersonalChats/PersonalChat";
 import './App.css';
 function App() {
   const dispatch = useDispatch();
@@ -46,6 +49,11 @@ function App() {
         <Group />
       </AuthRoute>
     } />
+      <Route path="/connections/:userId" element={
+      <AuthRoute>
+        <PersonInfo/>
+      </AuthRoute>
+    } />
     {/* NESTED CHAT ROUTES */}
     <Route path="/Gossipp/chats" element={
       <AuthRoute>
@@ -55,6 +63,17 @@ function App() {
       <Route path=":groupId" element={
         <AuthRoute>
         <GroupChat />
+        </AuthRoute>} />
+    </Route>
+    {/* --------------- */}
+    <Route path="/Gossipp/connections" element={
+      <AuthRoute>
+        <PersonalChat/>
+      </AuthRoute>
+      }>
+      <Route path=":chatId/:userId" element={
+        <AuthRoute>
+        <ChatSection/>
         </AuthRoute>} />
     </Route>
   </Routes>
