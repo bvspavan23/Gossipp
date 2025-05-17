@@ -12,6 +12,15 @@ export const getGroupsAPI = async () => {
   console.log("GROUPS", response.data);
   return response.data;
 };
+export const getJoinedGroupsAPI = async () => {
+  const response = await axios.get(`${GROUPS_URL}/user/joined-groups`,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  console.log("GROUPS", response.data);
+  return response.data;
+};
 export const createGroupAPI = async (formData) => {
   const response = await axios.post(`${GROUPS_URL}/`,formData ,{
     headers: {

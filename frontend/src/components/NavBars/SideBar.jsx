@@ -3,13 +3,14 @@ import { FiUsers, FiMenu, FiX, FiChevronDown, FiChevronRight } from "react-icons
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../../redux/slice/authSlice";
-import { getGroupsAPI } from "../../services/groups/groupServices";
+import { getGroupsAPI, getJoinedGroupsAPI } from "../../services/groups/groupServices";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoMdAdd } from "react-icons/io";
 import SidebarHeader from "./SidebarHeader";
 import LogoutButton from "./Logout";
 import ProfileSection from "./ProfileSection";
 import Shift from "./Shift";
+import GroupSearch from "../SearchBars/GroupSearch";
 
 const Sidebar = ({ onGroupSelect }) => {
   const [groupsData, setGroupsData] = useState([]);
@@ -42,7 +43,7 @@ const Sidebar = ({ onGroupSelect }) => {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const data = await getGroupsAPI();
+        const data = await getJoinedGroupsAPI();
         setGroupsData(data);
         const initialExpandedState = data.reduce((acc, group) => {
           acc[group._id] = false;
@@ -87,6 +88,9 @@ const Sidebar = ({ onGroupSelect }) => {
           icon={<FiUsers className="text-blue-500 text-2xl flex-shrink-0" />}
           title="Gossipp"
         />
+
+        <GroupSearch isCollapsed={isCollapsed} />
+
         <Shift 
   name="Go to Private Chats" 
   path="/Gossipp/connections" 

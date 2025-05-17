@@ -9,6 +9,7 @@ import LogoutButton from "./Logout";
 import ProfileSection from "./ProfileSection";
 import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 import Shift from "./Shift";
+import UserSearch from "../SearchBars/UserSearch";
 
 const generateChatId = (userId1, userId2) => {
   // Sort the IDs to ensure consistent chat ID regardless of order
@@ -92,6 +93,9 @@ const PersonalSideBar = () => {
           isMobileOpen={isMobileOpen}
           setIsMobileOpen={setIsMobileOpen}
         />
+
+        <UserSearch isCollapsed={isCollapsed} />
+        
         <Shift
           name="Go to Group Chats"
           path="/Gossipp/chats"

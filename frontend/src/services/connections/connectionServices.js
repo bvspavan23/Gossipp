@@ -56,3 +56,12 @@ export const sendPersonalMsgAPI= async (PersonalMsgData) => {
   });
   return response.data;
 }
+
+export const getUsersAPI= async () => {
+  const response = await axios.get(`${base_url}/api/connections`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
