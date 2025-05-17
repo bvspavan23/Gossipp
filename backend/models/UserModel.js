@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema(
       default: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
     },
     connections: [{ type: mongoose.Schema.Types.ObjectId,ref: "User" }],  
+    groups: [{ type: mongoose.Schema.Types.ObjectId,ref: "Group" }],
   },
   {
     timestamps: true,

@@ -5,6 +5,7 @@ const { protect, isAdmin } = require("../middleware/authMiddleware");
 const groupRouter = express.Router();
 const upload = require("../middleware/multer");
 const cloudinary = require("../cloudinary");
+const User = require("../models/UserModel");
 
 //Create a new group
 groupRouter.post("/", protect, upload.single("profilePic"), async (req, res) => {
@@ -83,7 +84,7 @@ groupRouter.get("/:groupId", protect, async (req, res) => {
 groupRouter.post("/:groupId/join", protect, async (req, res) => {
   try {
     const group = await Group.findById(req.params.groupId);
-
+    const user = await User.findById(req.user._id); 
     if (!group) {
       return res.status(404).json({ message: "Group not found" });
     }
@@ -94,6 +95,8 @@ groupRouter.post("/:groupId/join", protect, async (req, res) => {
     }
     group.members.push(req.user._id);
     await group.save();
+    user.groups.push(group._id);
+    await user.save();
     res.json({ message: "Successfully joined this group" });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -103,6 +106,7 @@ groupRouter.post("/:groupId/join", protect, async (req, res) => {
 groupRouter.post("/:groupId/leave", protect, async (req, res) => {
   try {
     const group = await Group.findById(req.params.groupId);
+    const user = await User.findById(req.user._id); // Add this line to get the user
     if (!group) {
       return res.status(404).json({ message: "Group not found" });
     }
@@ -113,9 +117,40 @@ groupRouter.post("/:groupId/leave", protect, async (req, res) => {
       return memberId.toString() !== req.user._id.toString();
     });
     await group.save();
+    user.groups = user.groups.filter(
+      (groupId) => groupId.toString() !== group._id.toString()
+    );
+    await user.save();
     res.json({ message: "Successfully left the group" });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+});
+
+groupRouter.get("/user/joined-groups", protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate({
+        path: "groups",
+        select: "name description admin members profilePic createdAt",
+        populate: [
+          {
+            path: "admin",
+            select: "username email profilePic"
+          },
+          {
+            path: "members",
+            select: "username email profilePic"
+          }
+        ]
+      });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(user.groups);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
