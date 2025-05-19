@@ -19,6 +19,7 @@ import GroupChat from "./components/Chat/GroupChat";
 import PersonInfo from "./components/PersonalChats/PersonInfo";
 import ChatSection from "./components/PersonalChats/ChatSection";
 import PersonalChat from "./components/PersonalChats/PersonalChat";
+import UserSearch from "./components/SearchBars/UserSearch";
 import './App.css';
 function App() {
   const dispatch = useDispatch();
@@ -52,6 +53,11 @@ function App() {
       <Route path="/connections/:userId" element={
       <AuthRoute>
         <PersonInfo/>
+      </AuthRoute>
+    } />
+      <Route path="/add-connection" element={
+      <AuthRoute>
+        <UserSearch/>
       </AuthRoute>
     } />
     {/* NESTED CHAT ROUTES */}

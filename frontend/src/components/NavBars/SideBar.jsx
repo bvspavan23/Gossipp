@@ -176,15 +176,25 @@ const Sidebar = ({ onGroupSelect }) => {
             ))
           ) : (
             !isCollapsed && (
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center text-gray-400 py-4"
-              >
-                No groups available
-              </motion.p>
-            )
-          )}
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex flex-col items-center justify-center text-center py-4 px-2"
+    >
+      <div className="mb-4">
+        <h3 className="text-lg font-medium text-gray-700 mb-1">
+          Join a group quickly!
+        </h3>
+        <p className="text-sm text-gray-500">
+          Have the vibe of Gossiping with us!
+        </p>
+      </div>
+      <div className="w-full max-w-xs">
+        <GroupSearch isCollapsed={isCollapsed} />
+      </div>
+    </motion.div>
+  )
+)}
         </div>
         <motion.div 
           whileHover={{ backgroundColor: 'rgba(254, 226, 226, 0.5)' }}

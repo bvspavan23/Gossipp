@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getUserByIdAPI } from "../../services/connections/connectionServices";
+import { getUserByIdAPI ,createConnectionAPI} from "../../services/connections/connectionServices";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -35,13 +35,16 @@ const PersonInfo = () => {
     }
   }, [userId, loggedInUser?._id]);
 
-  const handleConnection = async () => {
-    try {
-      setIsConnected(!isConnected);
-    } catch (error) {
-      console.error("Connection action failed:", error);
+const handleConnection = async () => {
+  try {
+    if (!isConnected) {
+      await createConnectionAPI(userId);
     }
-  };
+    setIsConnected(!isConnected);
+  } catch (error) {
+    console.error("Connection action failed:", error);
+  }
+};
 
   if (!user) return <p className="text-center mt-6">Loading profile...</p>;
 

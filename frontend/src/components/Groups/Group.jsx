@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import {getGroupByIdAPI,joinGroupAPI,leaveGroupAPI,} from "../../services/groups/groupServices";
-import { useParams } from "react-router-dom";
+import {
+  getGroupByIdAPI,
+  joinGroupAPI,
+  leaveGroupAPI,
+} from "../../services/groups/groupServices";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import AlertMessage from "../Alert/AlertMessage";
@@ -77,11 +81,11 @@ const GroupDetails = () => {
         {/* Group Avatar */}
         <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mb-4">
           <span className="text-2xl text-blue-600 font-bold">
-          <img
-          src={group.profilePic}
-          alt={group.username}
-          className="w-full h-full rounded-full object-cover mr-3"
-        />
+            <img
+              src={group.profilePic}
+              alt={group.username}
+              className="w-full h-full rounded-full object-cover mr-3"
+            />
             {/* {group.name?.charAt(0)} */}
           </span>
         </div>
@@ -110,34 +114,36 @@ const GroupDetails = () => {
                 Members ({group.members.length})
               </h3>
               <div className="space-y-3">
-              {group.members.map((member) => {
-  const isAdmin = member._id === group.admin._id;
-  return (
-    <div
-      key={member._id}
-      className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
-    >
-      <div className="flex items-center">
-        <img
-          src={member.profilePic}
-          alt={member.username}
-          className="w-8 h-8 rounded-full object-cover mr-3"
-        />
-        <span className="font-medium">{member.username}</span>
-      </div>
-      <span
-        className={`text-sm font-semibold px-2 py-1 rounded ${
-          isAdmin
-            ? "bg-yellow-300 text-yellow-800"
-            : "bg-green-100 text-green-700"
-        }`}
-      >
-        {isAdmin ? "Admin" : "Member"}
-      </span>
-    </div>
-  );
-})}
-
+                {group.members.map((member) => {
+                  const isAdmin = member._id === group.admin._id;
+                  return (
+                    <Link
+                      to={`/connections/${member._id}`}
+                      key={member._id}
+                      className="block hover:bg-gray-100 rounded-lg transition"
+                    >
+                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                        <div className="flex items-center">
+                          <img
+                            src={member.profilePic}
+                            alt={member.username}
+                            className="w-8 h-8 rounded-full object-cover mr-3"
+                          />
+                          <span className="font-medium">{member.username}</span>
+                        </div>
+                        <span
+                          className={`text-sm font-semibold px-2 py-1 rounded ${
+                            isAdmin
+                              ? "bg-yellow-300 text-yellow-800"
+                              : "bg-green-100 text-green-700"
+                          }`}
+                        >
+                          {isAdmin ? "Admin" : "Member"}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 

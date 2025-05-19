@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { leaveGroupAPI } from "../../services/groups/groupServices";
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import AlertMessage from "../Alert/AlertMessage";
 
 const ChatInfo = ({
@@ -22,7 +22,7 @@ const ChatInfo = ({
       setAlert({ type: "success", message: "Left the group successfully!" });
       setTimeout(() => {
         navigate("/Gossipp/chats");
-      }, 1500); // delay to show success message before redirecting
+      }, 1500);
     } catch (err) {
       setAlert({ type: "error", message: "Failed to leave the group." });
       console.error("Error leaving group:", err);
@@ -67,36 +67,39 @@ const ChatInfo = ({
             {members.map((member) => {
               const isOnline = onlineUsersInRoom.includes(member._id);
               return (
-                <div
+                <Link
+                  to={`/connections/${member._id}`}
                   key={member._id}
-                  className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
+                  className="block" 
                 >
-                  <div className="flex items-center space-x-3">
-                    <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
+                    <div className="flex items-center space-x-3">
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                          isOnline
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-200 text-gray-600"
+                        }`}
+                      >
+                        <img
+                          src={member.profilePic}
+                          alt="Profile"
+                          className="w-full h-full rounded-full object-cover"
+                        />
+                      </div>
+                      <span className="font-medium">{member.username}</span>
+                    </div>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${
                         isOnline
                           ? "bg-green-100 text-green-800"
-                          : "bg-gray-200 text-gray-600"
+                          : "bg-gray-100 text-gray-600"
                       }`}
                     >
-                      <img
-                        src={member.profilePic}
-                        alt="Profile"
-                        className="w-full h-full rounded-full object-cover"
-                      />
-                    </div>
-                    <span className="font-medium">{member.username}</span>
+                      {isOnline ? "Online" : "Offline"}
+                    </span>
                   </div>
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full ${
-                      isOnline
-                        ? "bg-green-100 text-green-800"
-                        : "bg-gray-100 text-gray-600"
-                    }`}
-                  >
-                    {isOnline ? "Online" : "Offline"}
-                  </span>
-                </div>
+                </Link>
               );
             })}
             <button

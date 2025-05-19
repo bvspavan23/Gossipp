@@ -1,10 +1,32 @@
 import { useState, useRef, useEffect } from "react";
-import { FiSend } from "react-icons/fi";
+import { FiSend, FiSmile } from "react-icons/fi";
+import EmojiPicker from "emoji-picker-react";
 
-const PersonalMessageInput = ({ onSendMessage,socket,userId, currentUserId,onTyping  }) => {
+const PersonalMessageInput = ({ 
+  onSendMessage,
+  socket,
+  userId, 
+  currentUserId,
+  onTyping  
+}) => {
   const [newMessage, setNewMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const typingTimeoutRef = useRef(null);
+  const emojiPickerRef = useRef(null);
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+        setShowEmojiPicker(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleTyping = () => {
     if (!isTyping) {
@@ -19,39 +41,35 @@ const PersonalMessageInput = ({ onSendMessage,socket,userId, currentUserId,onTyp
       onTyping(false);
     }, 2000);
   };
-  useEffect(() => {
-    return () => {
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-      if (isTyping) {
-        onTyping(false); 
-      }
-    };
-  }, [isTyping, onTyping]);
+
+  const handleEmojiClick = (emojiData) => {
+    setNewMessage(prev => prev + emojiData.emoji);
+    setShowEmojiPicker(false);
+    handleTyping(); // Trigger typing indicator when adding emoji
+  };
 
   const handleSend = () => {
     if (newMessage.trim()) {
       onSendMessage(newMessage);
       setNewMessage("");
-      // Notify that typing has stopped after sending
+      setShowEmojiPicker(false);
       if (isTyping) {
         setIsTyping(false);
         onTyping(false);
       }
-      // Clear any pending typing timeout
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
     }
   };
+
   return (
     <div className="p-4 bg-white border-t border-gray-200 sticky bottom-0">
       <div className="relative">
         <input
           type="text"
           placeholder="Type your message..."
-          className="w-full py-3 pr-16 pl-4 bg-gray-50 focus:bg-gray-100 border-none rounded-lg focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+          className="w-full py-3 pr-16 pl-12 bg-gray-50 focus:bg-gray-100 border-none rounded-lg focus:ring-2 focus:ring-blue-200 outline-none transition-all"
           value={newMessage}
           onChange={(e) => {
             setNewMessage(e.target.value);
@@ -59,6 +77,13 @@ const PersonalMessageInput = ({ onSendMessage,socket,userId, currentUserId,onTyp
           }}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
+        <button
+          type="button"
+          className="absolute left-3 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-blue-500 transition-colors"
+          onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+        >
+          <FiSmile className="text-xl" />
+        </button>
         <button
           onClick={handleSend}
           disabled={!newMessage.trim()}
@@ -70,6 +95,16 @@ const PersonalMessageInput = ({ onSendMessage,socket,userId, currentUserId,onTyp
         >
           <FiSend className="text-lg" />
         </button>
+        {showEmojiPicker && (
+          <div className="absolute bottom-16 left-0 z-10" ref={emojiPickerRef}>
+            <EmojiPicker 
+              onEmojiClick={handleEmojiClick} 
+              width={300}
+              height={400}
+              previewConfig={{ showPreview: false }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
