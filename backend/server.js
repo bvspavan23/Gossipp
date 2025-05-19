@@ -16,7 +16,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: ["https://gossipp.vercel.app"],
+    origin: ["http://gossipp.vercel.app"],
     methods: ["GET", "POST","PUT","DELETE"],
     credentials: true,
     transports: ["websocket"],
