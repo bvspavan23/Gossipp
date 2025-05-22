@@ -11,6 +11,8 @@ const User = require("../models/UserModel");
 groupRouter.post("/", protect, upload.single("profilePic"), async (req, res) => {
   try {
     const { name, description } = req.body;
+    const admin = await User.findById(req.user._id);
+    // const user = await User.findById(req.user._id); 
     let profilepicUrl = "";
 
     if (req.file) {
@@ -38,7 +40,8 @@ groupRouter.post("/", protect, upload.single("profilePic"), async (req, res) => 
       members: [req.user._id],
       profilePic: profilepicUrl,
     });
-
+    admin.groups.push(group._id);
+    await admin.save();
     const populatedGroup = await Group.findById(group._id)
       .populate("admin", "username email profilePic")
       .populate("members", "username email profilePic");
