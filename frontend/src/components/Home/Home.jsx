@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import {FiUsers,FiGlobe,FiUserPlus,FiLogIn,FiMessageSquare,FiLock,FiUserCheck,FiActivity} from "react-icons/fi";
+import LOGO from "../../assets/G_LOGOO.png"
+
 const Feature = ({
   title,
   text,
@@ -54,10 +56,17 @@ export default function LandingPage() {
     <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
       <div className="container mx-auto px-6 py-12">
         <div className="text-center mb-16">
-          <span className="text-6xl font-bold mb-4 flex justify-center">
+          <span className="text-6xl font-bold mb-4 flex justify-center items-center">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#feda75] to-[#fa7e1e] cursor-pointer inline-block scale-100 transition-transform duration-300 ease-in-out hover:scale-150">
-              G
+              <img 
+                src={LOGO} 
+                alt="Logo" 
+                className="h-[1em] w-auto mr-2"
+              />
             </span>
+            {/* <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#feda75] to-[#fa7e1e] cursor-pointer inline-block scale-100 transition-transform duration-300 ease-in-out hover:scale-150">
+              G
+            </span> */}
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#fa7e1e] to-[#d62976] cursor-pointer inline-block scale-100 transition-transform duration-300 ease-in-out hover:scale-150">
               o
             </span>
@@ -117,7 +126,7 @@ export default function LandingPage() {
               <div className="bg-gradient-to-r from-[#4f5bd5] to-[#962fbf] p-4 flex justify-between items-center text-white">
                 <div className="flex items-center space-x-2">
                   <FiUsers />
-                  <span className="font-bold">Team Gossipp</span>
+                  <span className="font-bold">Gossipp</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
@@ -209,8 +218,6 @@ export default function LandingPage() {
             />
           </div>
         </div>
-
-        {/* Call to Action */}
         <div className="mt-32 bg-gradient-to-r from-[#feda75] to-[#fa7e1e] p-10 rounded-xl flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0 shadow-xl">
           <div className="space-y-3">
             <h2 className="text-3xl font-bold text-white">
