@@ -1,13 +1,7 @@
 import { FiMessageCircle } from "react-icons/fi";
 import { motion } from "framer-motion";
 
-const PersonalChatMessages = ({ 
-  loadingMessages, 
-  messages, 
-  currentUserId,
-  typingUsers,
-  messagesEndRef 
-}) => {
+const PersonalChatMessages = ({ loadingMessages, messages, currentUserId,typingUsers,messagesEndRef}) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}

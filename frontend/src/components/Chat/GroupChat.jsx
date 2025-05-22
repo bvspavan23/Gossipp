@@ -22,7 +22,6 @@ const GroupChat = () => {
       try {
         const data = await getGroupByIdAPI(groupId);
         setGroupInfo(data);
-        console.log("GROUP INFO FROM GROUP CHAT", data);
         
       } catch (error) {
         console.error("Failed to fetch group info:", error);

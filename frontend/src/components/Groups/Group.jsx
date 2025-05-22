@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  getGroupByIdAPI,
-  joinGroupAPI,
-  leaveGroupAPI,
-} from "../../services/groups/groupServices";
+import {getGroupByIdAPI,joinGroupAPI,leaveGroupAPI} from "../../services/groups/groupServices";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
@@ -20,9 +16,6 @@ const GroupDetails = () => {
   const fetchGroup = async () => {
     try {
       const data = await getGroupByIdAPI(groupId);
-      console.log("Group data from group component:", data);
-      console.log("ADMIN FROM GROUP COMPONENT", data.admin);
-
       setGroup(data);
     } catch (err) {
       console.error("Error fetching group:", err);
@@ -30,7 +23,6 @@ const GroupDetails = () => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchGroup();
   }, [groupId]);
@@ -77,8 +69,6 @@ const GroupDetails = () => {
             <AlertMessage type={alert.type} message={alert.message} />
           </div>
         )}
-
-        {/* Group Avatar */}
         <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mb-4">
           <span className="text-2xl text-blue-600 font-bold">
             <img

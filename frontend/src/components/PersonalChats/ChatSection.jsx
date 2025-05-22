@@ -6,8 +6,6 @@ import { useEffect, useState } from "react";
 
 const ChatSection = () => {
   const { chatId, userId} = useParams();
-  console.log("CHAT ID FROM CHATSECTION", chatId);
-  console.log("USER ID FROM CHATSECTION", userId);
   const context = useOutletContext();
   const [userInfo, setUserInfo] = useState(null);
   const [chatIbnfo, setChatInfo] = useState(null);
@@ -23,7 +21,6 @@ const ChatSection = () => {
       try {
         const data = await getUserByIdAPI(userId);
         setUserInfo(data);
-        console.log("USER INFO FROM USER CHAT SECTION", data);
       } catch (error) {
         console.error("Failed to fetch user info:", error);
       }

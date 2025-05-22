@@ -8,7 +8,6 @@ const PersonInfo = () => {
   const [user, setUser] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const { userId } = useParams();
-  console.log("USER ID FROM PERSONAL INFO COMPONENT", userId);
   
   const loggedInUser = JSON.parse(localStorage.getItem("userInfo"))?.user;
   const navigate = useNavigate();
@@ -19,7 +18,6 @@ const PersonInfo = () => {
       try {
         setUser(null);
         const PersonInfo = await getUserByIdAPI(userId);
-        console.log("USER PROFILE", PersonInfo);
         setUser(PersonInfo);
         // Check if the logged in user is in this user's connections
         if (PersonInfo?.connections?.includes(loggedInUser?._id)) {
